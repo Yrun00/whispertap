@@ -38,6 +38,16 @@ Do not commit `.venv` to GitHub. It is intentionally ignored by `.gitignore`.
 
 ## Run
 
+Recommended:
+
+```powershell
+start_whispertap_admin.bat
+```
+
+WhisperTap uses a low-level Windows mouse hook and simulated paste hotkeys. Running it as administrator is more reliable, especially when the active app, editor, browser, or overlay is elevated. On some systems, running without administrator privileges can cause unstable hook behavior, missed hotkeys, or severe UI lag while recording.
+
+Plain non-admin launch:
+
 ```powershell
 start_whispertap.bat
 ```
@@ -95,4 +105,4 @@ Useful variants:
 
 - The model stays on disk after the first download.
 - The model is loaded into GPU memory only while `whispertap.py` is running.
-- If the app is not running as administrator, it may not capture input inside elevated administrator windows.
+- Prefer `start_whispertap_admin.bat` if mouse capture, paste, or performance feels unstable.
