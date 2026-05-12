@@ -1,0 +1,9 @@
+faster-whisper==1.2.1
+numpy==2.4.4
+Pillow==12.2.0
+PyAutoGUI==0.9.54
+pynput==1.8.1
+pyperclip==1.11.0
+pystray==0.19.5
+sounddevice==0.5.5
+soundfile==0.13.1
