@@ -79,14 +79,17 @@ While WhisperTap is running, `Mouse Button 5` is captured by a low-level Windows
 - model: `large-v3-turbo`
 - device: `cuda`
 - compute type: `float16`
-- language: `ru`
+- language: auto-detect
 - beam size: `1`
 
 Useful variants:
 
 ```powershell
-# Auto-detect language
-.\.venv\Scripts\python.exe .\whispertap.py --language auto
+# Force Russian
+.\.venv\Scripts\python.exe .\whispertap.py --language ru
+
+# Force English
+.\.venv\Scripts\python.exe .\whispertap.py --language en
 
 # More accuracy, a bit slower
 .\.venv\Scripts\python.exe .\whispertap.py --beam-size 3

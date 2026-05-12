@@ -149,8 +149,8 @@ class Settings:
     model: str = "large-v3-turbo"
     device: str = "cuda"
     compute_type: str = "float16"
-    language: str | None = "ru"
-    beam_size: int = 1
+    language: str | None = None
+    beam_size: int = 5
     vad_filter: bool = True
     restore_clipboard: bool = True
     restore_clipboard_delay: float = 0.5
@@ -383,7 +383,7 @@ def parse_args() -> Settings:
     parser.add_argument("--model", default="large-v3-turbo")
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--compute-type", default="float16")
-    parser.add_argument("--language", default="ru", help="Use 'auto' for language auto-detection.")
+    parser.add_argument("--language", default="auto", help="Use 'auto' for language auto-detection.")
     parser.add_argument("--beam-size", type=int, default=1)
     parser.add_argument("--no-vad", action="store_true")
     parser.add_argument("--keep-clipboard", action="store_true")
