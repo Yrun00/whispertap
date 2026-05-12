@@ -52,6 +52,8 @@ On the first run, the `large-v3-turbo` Whisper model is downloaded to the local 
 
 The tray menu has `Exit and unload model`. Closing the app exits the Python process and releases GPU memory.
 
+WhisperTap temporarily puts recognized text into the clipboard, pastes it, waits 0.5 seconds, and restores the previous clipboard.
+
 ## Use
 
 Press `Mouse Button 5` / `XButton2` once to start recording.
@@ -81,6 +83,12 @@ Useful variants:
 
 # Less VRAM
 .\.venv\Scripts\python.exe .\whispertap.py --compute-type int8_float16
+
+# Keep recognized text in the clipboard after paste
+.\.venv\Scripts\python.exe .\whispertap.py --keep-clipboard
+
+# Wait longer before restoring the previous clipboard
+.\.venv\Scripts\python.exe .\whispertap.py --restore-clipboard-delay 4
 ```
 
 ## Notes

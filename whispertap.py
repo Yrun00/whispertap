@@ -75,10 +75,16 @@ user32.DispatchMessageW.argtypes = [ctypes.POINTER(wintypes.MSG)]
 user32.DispatchMessageW.restype = wintypes.LPARAM
 user32.PostThreadMessageW.argtypes = [wintypes.DWORD, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM]
 user32.PostThreadMessageW.restype = wintypes.BOOL
+user32.keybd_event.argtypes = [wintypes.BYTE, wintypes.BYTE, wintypes.DWORD, ctypes.c_size_t]
+user32.keybd_event.restype = None
 kernel32.GetCurrentThreadId.argtypes = []
 kernel32.GetCurrentThreadId.restype = wintypes.DWORD
 kernel32.GetModuleHandleW.argtypes = [wintypes.LPCWSTR]
 kernel32.GetModuleHandleW.restype = wintypes.HMODULE
+
+VK_CONTROL = 0x11
+VK_V = 0x56
+KEYEVENTF_KEYUP = 0x0002
 
 
 class SuppressingMouseHotkey:
@@ -147,6 +153,7 @@ class Settings:
     beam_size: int = 1
     vad_filter: bool = True
     restore_clipboard: bool = True
+    restore_clipboard_delay: float = 0.5
     min_record_seconds: float = 0.35
 
 
@@ -319,12 +326,23 @@ class WhisperTap:
                 old_clipboard = None
 
         pyperclip.copy(text)
-        time.sleep(0.05)
-        pyautogui.hotkey("ctrl", "v")
+        time.sleep(0.2)
+        self._send_ctrl_v()
+        print("Paste hotkey sent", flush=True)
 
         if self.settings.restore_clipboard and old_clipboard is not None:
-            time.sleep(0.25)
+            time.sleep(self.settings.restore_clipboard_delay)
             pyperclip.copy(old_clipboard)
+
+    @staticmethod
+    def _send_ctrl_v() -> None:
+        try:
+            user32.keybd_event(VK_CONTROL, 0, 0, 0)
+            user32.keybd_event(VK_V, 0, 0, 0)
+            user32.keybd_event(VK_V, 0, KEYEVENTF_KEYUP, 0)
+            user32.keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0)
+        except Exception:
+            pyautogui.hotkey("ctrl", "v")
 
     @staticmethod
     def _clean_text(text: str) -> str:
@@ -369,6 +387,7 @@ def parse_args() -> Settings:
     parser.add_argument("--beam-size", type=int, default=1)
     parser.add_argument("--no-vad", action="store_true")
     parser.add_argument("--keep-clipboard", action="store_true")
+    parser.add_argument("--restore-clipboard-delay", type=float, default=0.5)
     args = parser.parse_args()
 
     language = None if args.language.lower() == "auto" else args.language
@@ -380,6 +399,7 @@ def parse_args() -> Settings:
         beam_size=args.beam_size,
         vad_filter=not args.no_vad,
         restore_clipboard=not args.keep_clipboard,
+        restore_clipboard_delay=args.restore_clipboard_delay,
     )
 
 
